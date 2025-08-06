@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samsung Strategic Market Analysis Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .dark body {
+            background-color: #111827;
+            color: #f9fafb;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+            padding: 1.5rem;
+        }
+
+        .dark .card {
+            background-color: #1f2937;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 350px !important;
+        }
+    </style>
+</head>
+
+<body class="p-6 md:p-10">
+
+    <header class="text-center mb-10">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-2">Samsung Strategic Market
+            Analysis</h1>
+        <p class="text-md text-gray-600 dark:text-gray-400">Key insights and trends for senior management on market
+            share, competitor performance, and channel strategy in the MENA region.</p>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
+
+        <!-- Chart 1: Sales Value Trend by Company -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">1. Sales Value Trend by Company</h2>
+            <canvas id="salesTrendChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This line chart shows the sales trend over the years for Samsung and its key competitors.
+                It provides a clear visual of Samsung's growth trajectory and highlights any periods of market share
+                gain or loss against rival companies. This is crucial for understanding long-term market position.
+            </p>
+        </div>
+
+        <!-- Chart 2: Total Market Share by Sales Value -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">2. Total Market Share by Sales Value</h2>
+            <canvas id="marketSharePieChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This pie chart breaks down the total sales value by company, illustrating overall market
+                share. It confirms Samsung's position as a market leader and quantifies the size of the competitive
+                landscape. This insight is foundational for all strategic discussions.
+            </p>
+        </div>
+
+        <!-- Chart 3: Samsung vs. Competitors by Country -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">3. Samsung vs. Competitors by Country</h2>
+            <canvas id="competitorComparisonChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This stacked bar chart compares Samsung's sales against the combined sales of all
+                competitors in each country. It clearly identifies weak territories for Samsung and highlights which
+                markets are the most competitive. The insights here can guide targeted marketing and sales efforts.
+            </p>
+        </div>
+
+        <!-- Chart 4: Sales Value by Channel Group -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">4. Sales Value by Channel Group</h2>
+            <canvas id="channelSalesPieChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This pie chart shows the distribution of sales across different channel groups (e.g.,
+                Telco, Retail, eTailer). It helps senior management understand which channels are performing best and
+                where investment, or a shift in focus, is needed to maximize sales efficiency.
+            </p>
+        </div>
+
+        <!-- Chart 5: Average Selling Price (ASP) by Company -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">5. Average Selling Price (ASP) by Company</h2>
+            <canvas id="aspChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This bar chart compares the average selling price for each company. It helps identify
+                opportunities for pricing flexibility. If Samsung's ASP is high but its market share is low in a
+                specific segment, a strategic pricing adjustment might be necessary to increase volume and revenue.
+            </p>
+        </div>
+
+        <!-- Chart 6: Units Sold by Smartphone Class -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">6. Units Sold by Smartphone Class</h2>
+            <canvas id="unitsByClassChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This chart visualizes the total number of units sold for each smartphone class (e.g., Ultra
+                Low-End, Mid-Range, High-End). This data reveals which price segments have the highest demand, allowing
+                Samsung to focus its product and marketing efforts on the most lucrative classes.
+            </p>
+        </div>
+
+        <!-- Chart 7: Total Sales by Country (All Companies) -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">7. Total Sales by Country (All Companies)</h2>
+            <canvas id="totalSalesByCountryChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This chart provides a high-level view of the most valuable countries by total sales for all
+                companies. This helps prioritize which countries should receive a larger marketing budget and more
+                strategic attention from a regional perspective.
+            </p>
+        </div>
+
+        <!-- Chart 8: Market Share in United Arab Emirates (Example Country) -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">8. Market Share in United Arab Emirates (UAE)</h2>
+            <canvas id="uaeMarketShareChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** A deep dive into a single high-value market like the UAE. This chart provides a granular
+                view of market share, allowing Samsung to assess its specific performance against competitors in a key
+                territory and formulate a highly localized strategy.
+            </p>
+        </div>
+
+        <!-- Chart 9: Average ASP Trend over Time -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">9. Average ASP Trend by Company over Time</h2>
+            <canvas id="aspTrendChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This line chart tracks the average selling price of Samsung and its competitors over time.
+                It can reveal if the company is successfully moving into higher-priced, more profitable segments or if
+                pricing is being driven down by competition.
+            </p>
+        </div>
+
+        <!-- Chart 10: Samsung's Sales by Channel and Year -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">10. Samsung's Sales by Channel and Year</h2>
+            <canvas id="samsungChannelTrendChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This chart focuses specifically on Samsung's sales across its various channels over the
+                years. This can help identify which sales channels are becoming more or less effective for the company,
+                informing resource allocation for future periods.
+            </p>
+        </div>
+
+        <!-- Chart 11: Units Sold Trend by Company -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">11. Units Sold Trend by Company</h2>
+            <canvas id="unitsTrendChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This line chart visualizes the trend of units sold over the years for Samsung and its top
+                competitors. By comparing unit sales with sales value, management can understand if growth is driven by
+                increasing volume or by selling higher-priced products.
+            </p>
+        </div>
+
+        <!-- Chart 12: Sales Value by Country and Channel -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">12. Sales Value by Country and Channel</h2>
+            <canvas id="salesByCountryAndChannelChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This stacked bar chart shows sales value per country, broken down by channel group. It
+                helps identify which channels are most effective in each specific market, allowing for a more granular
+                and targeted sales strategy.
+            </p>
+        </div>
+
+        <!-- Chart 13: Sales by Price Band (All Companies) -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">13. Sales Value by Price Band</h2>
+            <canvas id="salesByPriceBandChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This bar chart shows the total sales value across different price bands for the entire
+                market. It helps identify which price segments are the most valuable and guides product development and
+                marketing efforts.
+            </p>
+        </div>
+
+        <!-- Chart 14: Samsung's Sales by Price Band -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">14. Samsung's Sales Value by Price Band</h2>
+            <canvas id="samsungSalesByPriceBandChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** Focusing on Samsung's sales, this chart shows its performance in different price segments.
+                It helps management assess if the company is successfully competing in high-growth or high-margin
+                segments and identify potential weaknesses.
+            </p>
+        </div>
+
+        <!-- Chart 15: Competitor Sales by Price Band -->
+        <div class="card">
+            <h2 class="text-xl font-bold mb-4">15. Competitor Sales Value by Price Band</h2>
+            <canvas id="competitorSalesByPriceBandChart"></canvas>
+            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                **Insight:** This chart provides a view of where competitors are most successful in terms of price
+                bands. By comparing this to Samsung's performance, management can identify segments where competitors
+                are gaining an advantage and where a more aggressive strategy may be needed.
+            </p>
+        </div>
+
+    </main>
+
+    <script>
+        window.onload = function () {
+            // The following CSV data is from the user's uploaded file.
+            fetch('File/Sample.csv')
+                .then(response => response.text())
+                .then(csvDataString => {
+                    const data = parseCSV(csvDataString);
+                    CalculateChartData(data);
+                    console.log(data); // Use this data for charts or other logic
+                })
+                .catch(error => console.error('Error loading CSV file:', error));
+
+            let data = [];
+            const parseCSV = (csv) => {
+                const lines = csv.trim().split('\n');
+                const headers = lines[0].split(',').map(header => header.trim().replace(/"/g, ''));
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(v => v.trim().replace(/"/g, ''));
+                    if (values.length === headers.length) {
+                        let row = {};
+                        for (let j = 0; j < headers.length; j++) {
+                            row[headers[j]] = values[j];
+                        }
+                        data.push(row);
+                    }
+                }
+
+                console.log("data", data)
+                return data;
+            };
+
+            const getChartColors = (num) => {
+                const colors = ['#4f46e5', '#10b981', '#f97316', '#8b5cf6', '#ef4444', '#3b82f6', '#3b5998', '#ff6384', '#cc65fe', '#ffce56', '#a16207', '#9333ea', '#db2777', '#06b6d4', '#4ade80'];
+                return colors.slice(0, num);
+            };
+
+
+            // Aggregation Logic
+            const salesByYear = {};
+            const salesByCountryAndCompany = {};
+            const salesByChannelGroup = {};
+            const aspByCompany = {};
+            const unitsByClass = {};
+            const unitsByYear = {};
+            const salesByPriceBand = {};
+            const uaeSales = {};
+            const aspTrend = {};
+            const samsungChannelSales = {};
+            const unitsTrend = {};
+            const salesByCountryAndChannel = {};
+            const samsungSalesByPriceBand = {};
+            const competitorSalesByPriceBand = {};
+
+            const companies = new Set();
+            const countries = new Set();
+            const channelGroups = new Set();
+            const priceBands = new Set();
+            function CalculateChartData(data) {
+                data.forEach(item => {
+                    const year = item.Year;
+                    const country = item.Country;
+                    const company = item.Company;
+                    const channelGroup = item['Channel Group'];
+                    const units = parseInt(item.Units);
+                    const value = parseFloat(item['Value (USD M)'].split('$')[1]);
+                    const asp = parseFloat(item['ASP (USD)'].split('$')[1]);
+                    const smartphoneClass = item['Smartphone Class'];
+                    const priceBand = item['Price Band'];
+
+                    if (isNaN(units) || isNaN(value) || isNaN(asp)) return;
+
+                    companies.add(company);
+                    countries.add(country);
+                    channelGroups.add(channelGroup);
+                    priceBands.add(priceBand);
+
+                    // Chart 1 & 9: Sales Trend
+                    if (!salesByYear[year]) salesByYear[year] = {};
+                    if (!salesByYear[year][company]) salesByYear[year][company] = 0;
+                    salesByYear[year][company] += value;
+
+                    // Chart 3: Competitor Comparison
+                    if (!salesByCountryAndCompany[country]) salesByCountryAndCompany[country] = {};
+                    if (!salesByCountryAndCompany[country][company]) salesByCountryAndCompany[country][company] = 0;
+                    salesByCountryAndCompany[country][company] += value;
+
+                    // Chart 4 & 10: Channel Sales
+                    if (!salesByChannelGroup[channelGroup]) salesByChannelGroup[channelGroup] = 0;
+                    salesByChannelGroup[channelGroup] += value;
+
+                    if (company === 'Samsung') {
+                        if (!samsungChannelSales[year]) samsungChannelSales[year] = {};
+                        if (!samsungChannelSales[year][channelGroup]) samsungChannelSales[year][channelGroup] = 0;
+                        samsungChannelSales[year][channelGroup] += value;
+                    }
+
+                    // Chart 5: ASP by Company
+                    if (!aspByCompany[company]) aspByCompany[company] = { total: 0, count: 0 };
+                    aspByCompany[company].total += asp;
+                    aspByCompany[company].count += 1;
+
+                    // Chart 6: Units by Smartphone Class
+                    if (!unitsByClass[smartphoneClass]) unitsByClass[smartphoneClass] = 0;
+                    unitsByClass[smartphoneClass] += units;
+
+                    // Chart 7: Total Sales by Country
+                    // Aggregation handled in salesByCountryAndCompany
+
+                    // Chart 8: Market Share in UAE
+                    if (country === 'United Arab Emirates') {
+                        if (!uaeSales[company]) uaeSales[company] = 0;
+                        uaeSales[company] += value;
+                    }
+
+                    // Chart 9: ASP Trend
+                    if (!aspTrend[year]) aspTrend[year] = {};
+                    if (!aspTrend[year][company]) aspTrend[year][company] = { total: 0, count: 0 };
+                    aspTrend[year][company].total += asp;
+                    aspTrend[year][company].count += 1;
+
+                    // Chart 11: Units Trend
+                    if (!unitsTrend[year]) unitsTrend[year] = {};
+                    if (!unitsTrend[year][company]) unitsTrend[year][company] = 0;
+                    unitsTrend[year][company] += units;
+
+                    // Chart 12: Sales by Country and Channel
+                    if (!salesByCountryAndChannel[country]) salesByCountryAndChannel[country] = {};
+                    if (!salesByCountryAndChannel[country][channelGroup]) salesByCountryAndChannel[country][channelGroup] = 0;
+                    salesByCountryAndChannel[country][channelGroup] += value;
+
+                    // Chart 13, 14, 15: Sales by Price Band
+                    if (!salesByPriceBand[priceBand]) salesByPriceBand[priceBand] = 0;
+                    salesByPriceBand[priceBand] += value;
+
+                    if (company === 'Samsung') {
+                        if (!samsungSalesByPriceBand[priceBand]) samsungSalesByPriceBand[priceBand] = 0;
+                        samsungSalesByPriceBand[priceBand] += value;
+                    } else {
+                        if (!competitorSalesByPriceBand[priceBand]) competitorSalesByPriceBand[priceBand] = 0;
+                        competitorSalesByPriceBand[priceBand] += value;
+                    }
+                });
+
+                // Data preparation for charts
+                const totalSalesByCompany = {};
+                Array.from(companies).forEach(company => {
+                    totalSalesByCompany[company] = Object.values(salesByYear).reduce((acc, yearData) => acc + (yearData[company] || 0), 0);
+                });
+                const sortedCompanies = Object.keys(totalSalesByCompany).sort((a, b) => totalSalesByCompany[b] - totalSalesByCompany[a]);
+                const topCompetitors = sortedCompanies.filter(c => c !== 'Samsung').slice(0, 2);
+
+                const sortedPriceBands = Array.from(priceBands).sort();
+                const sortedCountries = Array.from(countries).sort();
+                const sortedChannelGroups = Array.from(channelGroups).sort();
+
+                const salesTrendData = {
+                    labels: Object.keys(salesByYear).sort(),
+                    datasets: [{
+                        label: 'Samsung',
+                        data: Object.keys(salesByYear).sort().map(year => salesByYear[year]['Samsung'] || 0),
+                        borderColor: getChartColors(10)[0],
+                        tension: 0.1,
+                        fill: false,
+                    }, ...topCompetitors.map((comp, index) => ({
+                        label: comp,
+                        data: Object.keys(salesByYear).sort().map(year => salesByYear[year][comp] || 0),
+                        borderColor: getChartColors(10)[index + 1],
+                        tension: 0.1,
+                        fill: false,
+                    }))],
+                };
+
+                const marketShareData = {
+                    labels: Object.keys(totalSalesByCompany),
+                    datasets: [{
+                        data: Object.values(totalSalesByCompany),
+                        backgroundColor: getChartColors(Object.keys(totalSalesByCompany).length),
+                    }],
+                };
+
+                const competitorComparisonData = {
+                    labels: sortedCountries,
+                    datasets: [
+                        {
+                            label: 'Samsung Sales',
+                            data: sortedCountries.map(country => salesByCountryAndCompany[country]['Samsung'] || 0),
+                            backgroundColor: getChartColors(10)[0],
+                        },
+                        {
+                            label: 'Competitor Sales',
+                            data: sortedCountries.map(country => Object.keys(salesByCountryAndCompany[country]).filter(c => c !== 'Samsung').reduce((acc, comp) => acc + salesByCountryAndCompany[country][comp], 0)),
+                            backgroundColor: getChartColors(10)[2],
+                        },
+                    ],
+                };
+
+                const channelSalesData = {
+                    labels: sortedChannelGroups,
+                    datasets: [{
+                        data: sortedChannelGroups.map(channel => salesByChannelGroup[channel] || 0),
+                        backgroundColor: getChartColors(sortedChannelGroups.length),
+                    }],
+                };
+
+                const aspData = {
+                    labels: Object.keys(aspByCompany),
+                    datasets: [{
+                        label: 'Average ASP (USD)',
+                        data: Object.keys(aspByCompany).map(comp => aspByCompany[comp].total / aspByCompany[comp].count),
+                        backgroundColor: getChartColors(Object.keys(aspByCompany).length),
+                    }],
+                };
+
+                const unitsByClassData = {
+                    labels: Object.keys(unitsByClass).sort(),
+                    datasets: [{
+                        label: 'Units Sold',
+                        data: Object.keys(unitsByClass).sort().map(cls => unitsByClass[cls]),
+                        backgroundColor: getChartColors(Object.keys(unitsByClass).length),
+                    }],
+                };
+
+                const totalSalesByCountryData = {
+                    labels: sortedCountries,
+                    datasets: [{
+                        label: 'Total Sales Value (USD M)',
+                        data: sortedCountries.map(country => Object.values(salesByCountryAndCompany[country]).reduce((sum, value) => sum + value, 0)),
+                        backgroundColor: getChartColors(10)[5],
+                    }],
+                };
+
+                const uaeMarketShareData = {
+                    labels: Object.keys(uaeSales),
+                    datasets: [{
+                        data: Object.values(uaeSales),
+                        backgroundColor: getChartColors(Object.keys(uaeSales).length),
+                    }],
+                };
+
+                const aspTrendData = {
+                    labels: Object.keys(aspTrend).sort(),
+                    datasets: [{
+                        label: 'Samsung ASP',
+                        data: Object.keys(aspTrend).sort().map(year => (aspTrend[year]['Samsung']?.total / aspTrend[year]['Samsung']?.count) || 0),
+                        borderColor: getChartColors(10)[0],
+                        tension: 0.1,
+                        fill: false,
+                    }, ...topCompetitors.map((comp, index) => ({
+                        label: `${comp} ASP`,
+                        data: Object.keys(aspTrend).sort().map(year => (aspTrend[year][comp]?.total / aspTrend[year][comp]?.count) || 0),
+                        borderColor: getChartColors(10)[index + 1],
+                        tension: 0.1,
+                        fill: false,
+                    }))],
+                };
+
+                const samsungChannelTrendData = {
+                    labels: Object.keys(samsungChannelSales).sort(),
+                    datasets: sortedChannelGroups.map((channel, index) => ({
+                        label: channel,
+                        data: Object.keys(samsungChannelSales).sort().map(year => samsungChannelSales[year][channel] || 0),
+                        backgroundColor: getChartColors(sortedChannelGroups.length)[index],
+                    })),
+                };
+
+                const unitsTrendData = {
+                    labels: Object.keys(unitsTrend).sort(),
+                    datasets: [{
+                        label: 'Samsung',
+                        data: Object.keys(unitsTrend).sort().map(year => unitsTrend[year]['Samsung'] || 0),
+                        borderColor: getChartColors(10)[0],
+                        tension: 0.1,
+                        fill: false,
+                    }, ...topCompetitors.map((comp, index) => ({
+                        label: comp,
+                        data: Object.keys(unitsTrend).sort().map(year => unitsTrend[year][comp] || 0),
+                        borderColor: getChartColors(10)[index + 1],
+                        tension: 0.1,
+                        fill: false,
+                    }))],
+                };
+
+                const salesByCountryAndChannelData = {
+                    labels: sortedCountries,
+                    datasets: sortedChannelGroups.map((channel, index) => ({
+                        label: channel,
+                        data: sortedCountries.map(country => salesByCountryAndChannel[country][channel] || 0),
+                        backgroundColor: getChartColors(sortedChannelGroups.length)[index],
+                    })),
+                };
+
+                const salesByPriceBandData = {
+                    labels: sortedPriceBands,
+                    datasets: [{
+                        label: 'Sales Value (USD M)',
+                        data: sortedPriceBands.map(band => salesByPriceBand[band] || 0),
+                        backgroundColor: getChartColors(10)[3],
+                    }],
+                };
+
+                const samsungSalesByPriceBandData = {
+                    labels: sortedPriceBands,
+                    datasets: [{
+                        label: 'Samsung Sales Value (USD M)',
+                        data: sortedPriceBands.map(band => samsungSalesByPriceBand[band] || 0),
+                        backgroundColor: getChartColors(10)[0],
+                    }],
+                };
+
+                const competitorSalesByPriceBandData = {
+                    labels: sortedPriceBands,
+                    datasets: [{
+                        label: 'Competitor Sales Value (USD M)',
+                        data: sortedPriceBands.map(band => competitorSalesByPriceBand[band] || 0),
+                        backgroundColor: getChartColors(10)[2],
+                    }],
+                };
+
+                // Chart rendering functions
+                const createChart = (id, type, data, options = {}) => {
+                    const ctx = document.getElementById(id).getContext('2d');
+                    options.plugins = {
+                        
+                    }
+
+                    new Chart(ctx, { type, data, options });
+                };
+
+                createChart('salesTrendChart', 'line', salesTrendData, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { title: { display: true, text: 'Year' } }, y: { title: { display: true, text: 'Value (USD M)' } } },
+                    plugins: {
+                        tooltip: {
+                            enabled: true,        // Make sure tooltips are enabled
+                            mode: 'nearest',      // Default mode, you can customize
+                            intersect: false,     // Tooltip shows when hovering near a point, not just exactly on it
+                            // You can add more customization here, e.g. callbacks for formatting
+                        }
+                    }
+                });
+                createChart('marketSharePieChart', 'pie', marketShareData, { responsive: true, maintainAspectRatio: false, });
+                createChart('competitorComparisonChart', 'bar', competitorComparisonData, { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'Value (USD M)' } } },plugins: {
+        tooltip: {
+            enabled: true,      // Enable tooltips explicitly
+            mode: 'index',      // Show tooltip for all items at the hovered index (good for stacked bar)
+            intersect: false,   // Tooltip shows even if cursor is near, not only on the bar itself
+            // You can add more customization here, like callbacks for formatting tooltip content
+        }
+    } });
+                createChart('channelSalesPieChart', 'pie', channelSalesData, { responsive: true, maintainAspectRatio: false, });
+                createChart('aspChart', 'bar', aspData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Average ASP ($)' } } } });
+                createChart('unitsByClassChart', 'bar', unitsByClassData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Units Sold' } } } });
+                createChart('totalSalesByCountryChart', 'bar', totalSalesByCountryData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Value (USD M)' } } } });
+                createChart('uaeMarketShareChart', 'pie', uaeMarketShareData, { responsive: true, maintainAspectRatio: false, });
+                createChart('aspTrendChart', 'line', aspTrendData, { responsive: true, maintainAspectRatio: false, scales: { x: { title: { display: true, text: 'Year' } }, y: { title: { display: true, text: 'Average ASP ($)' } } } });
+                createChart('samsungChannelTrendChart', 'bar', samsungChannelTrendData, { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, title: { display: true, text: 'Year' } }, y: { stacked: true, title: { display: true, text: 'Value (USD M)' } } } });
+                createChart('unitsTrendChart', 'line', unitsTrendData, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { title: { display: true, text: 'Year' } }, y: { title: { display: true, text: 'Units Sold' } } },
+                });
+                createChart('salesByCountryAndChannelChart', 'bar', salesByCountryAndChannelData, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'Value (USD M)' } } },
+                });
+                createChart('salesByPriceBandChart', 'bar', salesByPriceBandData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Sales Value (USD M)' } } } });
+                createChart('samsungSalesByPriceBandChart', 'bar', samsungSalesByPriceBandData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Sales Value (USD M)' } } } });
+                createChart('competitorSalesByPriceBandChart', 'bar', competitorSalesByPriceBandData, { responsive: true, maintainAspectRatio: false, scales: { y: { title: { display: true, text: 'Sales Value (USD M)' } } } });
+            }
+        };
+    </script>
+</body>
+
+</html>
