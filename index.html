@@ -226,7 +226,7 @@
     <script>
         window.onload = function () {
             // The following CSV data is from the user's uploaded file.
-            fetch('File/Sample.csv')
+            fetch('/Sample.csv')
                 .then(response => response.text())
                 .then(csvDataString => {
                     const data = parseCSV(csvDataString);
@@ -598,5 +598,6 @@
         };
     </script>
 </body>
+
 
 </html>
